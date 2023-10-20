@@ -4,7 +4,7 @@
     <!-- Setting up log path and log file name -->
     <property name="SUFFIX_APP" value="_app" />
     <property name="LOG_FILE_NAME" value="hrms" />
-    <property name="APP_LOG_ROOT" value="D:\projects\hr_management\logs" />
+    <property name="APP_LOG_ROOT" value="D:\projects\logs\hrms-log" />
     <property name="CONSOLE_LOG_PATTERN" value="%white(%d) %highlight(%-5level) [%blue(%t)] %yellow(%C) %mdc{tenantId} %mdc{loginId}: %m%n%ex" />
     <property name="FILE_LOG_PATTERN" value="%d| %5p| %logger{30}| %mdc{tenantId} %mdc{loginId}| %m%n" />
 
