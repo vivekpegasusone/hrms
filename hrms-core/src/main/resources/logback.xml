@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<configuration> 
+
+    <!-- Setting up log path and log file name -->
+    <property name="SUFFIX_APP" value="_app" />
+    <property name="LOG_FILE_NAME" value="hrms" />
+    <property name="APP_LOG_ROOT" value="D:\projects\hr_management\logs" />
+    <property name="CONSOLE_LOG_PATTERN" value="%white(%d) %highlight(%-5level) [%blue(%t)] %yellow(%C) %mdc{tenantId} %mdc{loginId}: %m%n%ex" />
+    <property name="FILE_LOG_PATTERN" value="%d| %5p| %logger{30}| %mdc{tenantId} %mdc{loginId}| %m%n" />
+
+    <!-- Setting up logging pattern for console logging -->
+    <appender name="ConsoleOutput" class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <Pattern>${CONSOLE_LOG_PATTERN}</Pattern>
+        </layout>
+    </appender>
+
+    <!-- Setting the filename and logging pattern for log file -->
+    <appender name="AppLogFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${APP_LOG_ROOT}/${LOG_FILE_NAME}${SUFFIX_APP}.log</file>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <Pattern>${FILE_LOG_PATTERN}</Pattern>
+        </encoder>
+        <!-- Setting up a rolling policy with rolling done daily and when file size is 10MB-->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${APP_LOG_ROOT}/archived/${LOG_FILE_NAME}${SUFFIX_APP}-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy	class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>1MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <minIndex>1</minIndex>
+            <maxIndex>10</maxIndex>
+        </rollingPolicy>
+    </appender>
+
+    <appender name="LogFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${APP_LOG_ROOT}/${LOG_FILE_NAME}.log</file>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <Pattern>${FILE_LOG_PATTERN}</Pattern>
+        </encoder>
+        <!-- Setting up a rolling policy with rolling done daily and when file size is 10MB-->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${APP_LOG_ROOT}/archived/${LOG_FILE_NAME}-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy	class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>1MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <minIndex>1</minIndex>
+            <maxIndex>10</maxIndex>
+        </rollingPolicy>
+    </appender>
+
+    <!-- Logging at DEBUG level -->
+    <!--<logger name="com.whizzy.hrms" level="DEBUG" additivity="false">
+        <appender-ref ref="AppLogFile" />
+    </logger>-->
+
+    <!--<logger name="org.hibernate" level="INFO" additivity="false">
+        <appender-ref ref="AppLogFile" />
+    </logger>-->
+
+    <root level="INFO">
+        <appender-ref ref="LogFile" />
+        <appender-ref ref="ConsoleOutput" />
+    </root>
+
+</configuration>
