@@ -10,6 +10,7 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.Instant;
 
@@ -17,7 +18,7 @@ import java.time.Instant;
 @EntityListeners(AuditingEntityListener.class)
 @JsonIgnoreProperties(value = {"createdBy", "createdDate", "updatedBy", "updatedDate"}, allowGetters = true)
 public abstract class AuditableEntity<T> implements Serializable {
-
+    @Serial
     private static final long serialVersionUID = -4063966073240509059L;
 
     public abstract T getId();

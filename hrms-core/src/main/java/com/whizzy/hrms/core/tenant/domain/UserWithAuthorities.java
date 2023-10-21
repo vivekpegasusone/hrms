@@ -19,7 +19,7 @@ public class UserWithAuthorities {
         this.lastName = lastName;
         this.loginId = loginId;
         this.password = password;
-        this.status = status == true ? ACTIVE : IN_ACTIVE;
+        this.status = status ? ACTIVE : IN_ACTIVE;
     }
 
     public boolean addAuthority(String authority) {

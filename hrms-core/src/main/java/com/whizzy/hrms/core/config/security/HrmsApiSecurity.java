@@ -47,7 +47,6 @@ public class HrmsApiSecurity {
     @Autowired
     private HrmsAuthenticationEntryPoint authenticationEntryPoint;
 
-    private static final String[] ANY_OTHER = {"/**"};
     private static final String[] APP_URL = {"/api/**"};
 
     @Bean
