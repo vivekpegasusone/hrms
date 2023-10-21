@@ -16,7 +16,7 @@ import java.io.IOException;
 public class HrmsAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
     @Autowired
-    @Qualifier("handlerExceptionResolver")
+    @Qualifier(value = "handlerExceptionResolver")
     private HandlerExceptionResolver resolver;
 
     @Override

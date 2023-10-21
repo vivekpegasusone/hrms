@@ -1,9 +1,9 @@
 package com.whizzy.hrms.core.config;
 
-import com.whizzy.hrms.core.master.repository.TenantConfigUserRepository;
-import com.whizzy.hrms.core.master.repository.TenantRepository;
 import com.whizzy.hrms.core.tenant.TenantConnectionProvider;
 import com.whizzy.hrms.core.tenant.TenantResolver;
+import com.whizzy.hrms.core.master.repository.TenantConfigUserRepository;
+import com.whizzy.hrms.core.master.repository.TenantRepository;
 import jakarta.persistence.EntityManagerFactory;
 import org.hibernate.cfg.AvailableSettings;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -9,11 +9,13 @@ public interface HrmsCoreConstants {
     String COLLON = ":";
     String NONE = "none";
     String AT_THE_RATE = "@";
+    String ACTIVE = "Active";
     String MASTER = "master";
     String UNKNOWN = "UnKnown";
     String LOGIN_ID = "loginId";
     String APP_NAME = "HRMS App";
     String TENANT_ID = "tenantId";
+    String IN_ACTIVE = "In-Active";
     String JWT_TOKEN = "JWT Token";
     String USER_NAME = "username";
     String DEFAULT_TENANT = "drishti";

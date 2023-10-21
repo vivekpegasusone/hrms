@@ -1,8 +1,8 @@
-package com.whizzy.hrms.core.service.impl;
+package com.whizzy.hrms.core.tenant.service.impl;
 
-import com.whizzy.hrms.core.domain.dto.UserWithAuthorities;
-import com.whizzy.hrms.core.repository.UserAuthenticationRepository;
-import com.whizzy.hrms.core.service.UserAuthenticationService;
+import com.whizzy.hrms.core.tenant.domain.UserWithAuthorities;
+import com.whizzy.hrms.core.tenant.repository.UserAuthenticationRepository;
+import com.whizzy.hrms.core.tenant.service.UserAuthenticationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

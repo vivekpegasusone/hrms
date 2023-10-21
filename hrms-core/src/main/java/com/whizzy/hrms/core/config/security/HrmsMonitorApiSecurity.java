@@ -1,6 +1,6 @@
 package com.whizzy.hrms.core.config.security;
 
-import com.whizzy.hrms.core.provider.auth.MonitoringAuthProvider;
+import com.whizzy.hrms.core.master.authprovider.MonitoringAuthProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;

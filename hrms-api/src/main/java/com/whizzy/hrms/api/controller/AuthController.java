@@ -1,8 +1,8 @@
 package com.whizzy.hrms.api.controller;
 
 import com.whizzy.hrms.api.domain.auth.AuthDetail;
-import com.whizzy.hrms.core.domain.dto.UserWithAuthorities;
-import com.whizzy.hrms.core.service.UserAuthenticationService;
+import com.whizzy.hrms.core.tenant.domain.UserWithAuthorities;
+import com.whizzy.hrms.core.tenant.service.UserAuthenticationService;
 import com.whizzy.hrms.core.util.SecurityUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

@@ -16,7 +16,7 @@ import java.io.IOException;
 public class HrmsAccessDeniedHandler implements AccessDeniedHandler {
 
     @Autowired
-    @Qualifier("handlerExceptionResolver")
+    @Qualifier(value = "handlerExceptionResolver")
     private HandlerExceptionResolver resolver;
 
     @Override

@@ -1,25 +1,28 @@
-package com.whizzy.hrms.core.domain.dto;
+package com.whizzy.hrms.core.tenant.domain;
 
 import java.util.HashSet;
 import java.util.Set;
+
+import static com.whizzy.hrms.core.util.HrmsCoreConstants.ACTIVE;
+import static com.whizzy.hrms.core.util.HrmsCoreConstants.IN_ACTIVE;
 
 public class UserWithAuthorities {
     private String firstName;
     private String lastName;
     private String loginId;
     private String password;
-    private Boolean active;
+    private String status;
     private Set<String> authorities = new HashSet<>();
 
     public UserWithAuthorities() {
     }
 
-    public UserWithAuthorities(String firstName, String lastName, String loginId, String password, Boolean active) {
+    public UserWithAuthorities(String firstName, String lastName, String loginId, String password, Boolean status) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.loginId = loginId;
         this.password = password;
-        this.active = active;
+        this.status = status == true ? ACTIVE : IN_ACTIVE;
     }
 
     public boolean addAuthority(String authority) {
@@ -42,8 +45,8 @@ public class UserWithAuthorities {
         return password;
     }
 
-    public Boolean getActive() {
-        return active;
+    public String getStatus() {
+        return status;
     }
 
     public Set<String> getAuthorities() {
@@ -56,7 +59,7 @@ public class UserWithAuthorities {
                 "firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", loginId='" + loginId + '\'' +
-                ", active=" + active +
+                ", status=" + status +
                 ", authorities=" + authorities +
                 '}';
     }

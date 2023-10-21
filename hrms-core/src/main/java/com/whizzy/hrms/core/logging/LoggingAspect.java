@@ -40,9 +40,9 @@ public class LoggingAspect {
 
     @AfterThrowing(pointcut = "com.whizzy.hrms.core.logging.LoggingPointCuts.pointcutBasedOnPackage()", throwing = "e")
     public void logAfterThrowing(JoinPoint joinPoint, Throwable e) {
-        log.error("Exception in {}.{}() with cause {}",
+        log.error("Exception in {}.{}(). {}",
                 joinPoint.getSignature().getDeclaringTypeName(),
                 joinPoint.getSignature().getName(),
-                Objects.nonNull(e.getCause()) ? e.getCause() : UNKNOWN);
+                Objects.nonNull(e) ? e.getLocalizedMessage() : UNKNOWN);
     }
 }

@@ -1,4 +1,4 @@
-package com.whizzy.hrms.core.repository;
+package com.whizzy.hrms.core.tenant.repository;
 
 import java.util.List;
 

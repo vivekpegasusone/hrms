@@ -4,7 +4,6 @@ import com.whizzy.hrms.core.master.domain.Tenant;
 import com.whizzy.hrms.core.master.service.TenantService;
 import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;

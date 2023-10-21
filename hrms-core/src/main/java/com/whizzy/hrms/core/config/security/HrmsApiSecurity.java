@@ -5,7 +5,7 @@ import com.whizzy.hrms.core.exception.security.HrmsAuthenticationEntryPoint;
 import com.whizzy.hrms.core.filter.JwtFilter;
 import com.whizzy.hrms.core.filter.JwtValidatorFilter;
 import com.whizzy.hrms.core.filter.TenantFilter;
-import com.whizzy.hrms.core.provider.auth.TenantAuthProvider;
+import com.whizzy.hrms.core.tenant.authprovider.TenantAuthProvider;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -64,7 +64,7 @@ public class HrmsApiSecurity {
                 )
                 .cors(corsConfig -> corsConfig.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
-                .exceptionHandling(exConfig -> exConfig.authenticationEntryPoint(authenticationEntryPoint))
+                //.exceptionHandling(exConfig -> exConfig.authenticationEntryPoint(authenticationEntryPoint))
                 .exceptionHandling(exConfig -> exConfig.accessDeniedHandler(accessDeniedHandler))
                 .addFilterBefore(jwtValidatorFilter, BasicAuthenticationFilter.class)
                 .addFilterBefore(tenantFilter, BasicAuthenticationFilter.class)
@@ -74,7 +74,7 @@ public class HrmsApiSecurity {
                         .anyRequest().authenticated())
                 );
         httpSecurity.authenticationProvider(tenantAuthProvider);
-        httpSecurity.httpBasic(Customizer.withDefaults());
+        httpSecurity.httpBasic(httpBasic -> httpBasic.authenticationEntryPoint(authenticationEntryPoint));
         return httpSecurity.build();
     }
 

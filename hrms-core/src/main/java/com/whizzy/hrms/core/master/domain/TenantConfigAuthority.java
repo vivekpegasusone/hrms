@@ -24,18 +24,18 @@ public class TenantConfigAuthority {
     private String createdBy;
 
     @NotNull
-    @Column(name = "created_date", nullable = false)
+    @Column(name = "created_on", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
-    private Date createdDate;
+    private Date createdOn;
 
     @NotNull
     @Column(name = "updated_by", nullable = false)
     private String updatedBy;
 
     @NotNull
-    @Column(name = "updated_date", nullable = false)
+    @Column(name = "updated_on", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
-    private Date updatedDate;
+    private Date updatedOn;
 
     public TenantConfigAuthority() {
     }
@@ -64,12 +64,12 @@ public class TenantConfigAuthority {
         this.createdBy = createdBy;
     }
 
-    public Date getCreatedDate() {
-        return createdDate;
+    public Date getCreatedOn() {
+        return createdOn;
     }
 
-    public void setCreatedDate(Date createdDate) {
-        this.createdDate = createdDate;
+    public void setCreatedOn(Date createdOn) {
+        this.createdOn = createdOn;
     }
 
     public String getUpdatedBy() {
@@ -80,12 +80,12 @@ public class TenantConfigAuthority {
         this.updatedBy = updatedBy;
     }
 
-    public Date getUpdatedDate() {
-        return updatedDate;
+    public Date getUpdatedOn() {
+        return updatedOn;
     }
 
-    public void setUpdatedDate(Date updatedDate) {
-        this.updatedDate = updatedDate;
+    public void setUpdatedOn(Date updatedOn) {
+        this.updatedOn = updatedOn;
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.whizzy.hrms.core.exception.handler;
 
+import io.jsonwebtoken.security.SignatureException;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
@@ -29,6 +30,14 @@ public class HrmsExceptionHandler extends ResponseEntityExceptionHandler {
     public ErrorResponse handleAccessDeniedException(Exception ex, WebRequest request) {
         return ErrorResponse.builder(ex, HttpStatus.UNAUTHORIZED, ex.getMessage())
                 .title("Access Denied Exception")
+                .type(URI.create(request.getContextPath()))
+                .build();
+    }
+
+    @ExceptionHandler
+    public ErrorResponse handleSignatureException(SignatureException se, WebRequest request) {
+        return ErrorResponse.builder(se, HttpStatus.UNAUTHORIZED, se.getMessage())
+                .title("Invalid Authorization Token")
                 .type(URI.create(request.getContextPath()))
                 .build();
     }
