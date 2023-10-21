@@ -26,6 +26,4 @@ public interface HrmsCoreConstants {
     String TENANT_PERSISTENT_UNIT = "tenant-persistence-unit";
 
     List<String> AUTH_URL = List.of("/api/authentication");
-
-    String LOGIN_REGEX = "^(?>[a-zA-Z0-9!$&*+=?^_`{|}~.-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*)|(?>[_.@A-Za-z0-9-]+)$";
 }

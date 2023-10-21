@@ -3,12 +3,13 @@ package com.whizzy.hrms.core.master.domain;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 
 @Entity
 @Table(name = "tenant_config_authority")
-public class TenantConfigAuthority {
+public class TenantConfigAuthority implements Serializable {
     private static final long serialVersionUID = 757923560594349052L;
 
     @Id

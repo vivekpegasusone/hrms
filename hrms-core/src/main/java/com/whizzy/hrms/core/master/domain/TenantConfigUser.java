@@ -4,13 +4,14 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 import java.util.Set;
 
 @Entity
 @Table(name = "tenant_config_user")
-public class TenantConfigUser {
+public class TenantConfigUser implements Serializable {
     private static final long serialVersionUID = 474145248010754968L;
 
     @Id

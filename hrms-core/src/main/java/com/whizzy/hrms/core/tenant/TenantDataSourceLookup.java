@@ -26,7 +26,7 @@ public class TenantDataSourceLookup extends MapDataSourceLookup {
     public void onContextRefresh(ContextRefreshedEvent contextRefreshedEvent) {
         TenantService tenantService = applicationContext.getBean(TenantService.class);
         List<Tenant> tenants = tenantService.findByActive(true);
-        tenants.stream().forEach(t -> {
+        tenants.forEach(t -> {
             HikariDataSource dataSource = createDataSource(t, t.getName());
             addDataSource(t.getName(), dataSource);
         });
