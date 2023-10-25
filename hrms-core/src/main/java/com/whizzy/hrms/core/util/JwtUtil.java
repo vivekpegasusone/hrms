@@ -21,7 +21,7 @@ public class JwtUtil {
     private static final String JWT_TOKEN = "JWT Token";
     private static final String APPLICATION_JSON = "application/json";
 
-    public record UserAndAuthorities (String tenantId, String name, String authorities) {};
+    public record UserAndAuthorities (String tenantId, String name, String authorities) {}
 
     public static String generateToken(String tenantId, String name, String authorities,
                                        SecretKey secretKey, long tokenExpiryTime)

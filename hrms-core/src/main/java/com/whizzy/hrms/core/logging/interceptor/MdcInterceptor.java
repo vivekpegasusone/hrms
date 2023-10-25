@@ -18,7 +18,6 @@ import static com.whizzy.hrms.core.util.SecurityUtil.getCurrentUserLoginId;
 
 @Component
 public class MdcInterceptor implements WebRequestInterceptor {
-    public static Logger LOG = LoggerFactory.getLogger(MdcInterceptor.class);
 
     @Override
     public void preHandle(WebRequest request) {

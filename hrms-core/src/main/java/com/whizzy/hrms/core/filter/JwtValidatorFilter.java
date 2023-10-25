@@ -34,11 +34,13 @@ import static com.whizzy.hrms.core.util.HrmsCoreConstants.AUTH_URL;
 public class JwtValidatorFilter extends OncePerRequestFilter {
     private static final Logger LOG = LoggerFactory.getLogger(JwtValidatorFilter.class);
 
-    @Value("${hrms.jwt.secret}")
-    private String secretKey;
+    private final String secretKey;
+    private final ObjectMapper objectMapper;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+    public JwtValidatorFilter(@Value("${hrms.jwt.secret}") String secretKey, @Autowired ObjectMapper objectMapper) {
+        this.secretKey = secretKey;
+        this.objectMapper = objectMapper;
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
