@@ -11,6 +11,8 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.context.request.WebRequestInterceptor;
 
 
+import java.util.Objects;
+
 import static com.whizzy.hrms.core.util.HrmsCoreConstants.*;
 import static com.whizzy.hrms.core.util.SecurityUtil.getCurrentUserLoginId;
 
@@ -20,8 +22,13 @@ public class MdcInterceptor implements WebRequestInterceptor {
 
     @Override
     public void preHandle(WebRequest request) {
-        MDC.put(TENANT_ID, TENANT_ID + COLLON + TenantContext.getTenantId());
-        MDC.put(LOGIN_ID, LOGIN_ID + COLLON + getCurrentUserLoginId());
+        if(Objects.nonNull(TenantContext.getTenantId())) {
+            MDC.put(TENANT_ID, TENANT_ID + COLLON + TenantContext.getTenantId());
+        }
+
+        if(Objects.nonNull(getCurrentUserLoginId())) {
+            MDC.put(LOGIN_ID, LOGIN_ID + COLLON + getCurrentUserLoginId());
+        }
     }
 
     @Override

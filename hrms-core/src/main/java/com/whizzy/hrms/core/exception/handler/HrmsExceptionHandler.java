@@ -44,7 +44,7 @@ public class HrmsExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ErrorResponse handleAllException(Exception ex, WebRequest request) {
-        return ErrorResponse.builder(ex, HttpStatus.EXPECTATION_FAILED, ex.getMessage())
+        return ErrorResponse.builder(ex, HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage())
                 .title("Generic Exception")
                 .type(URI.create(request.getContextPath()))
                 .build();

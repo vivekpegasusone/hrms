@@ -1,16 +1,20 @@
 package com.whizzy.hrms.core.filter;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.whizzy.hrms.core.tenant.TenantContext;
 import com.whizzy.hrms.core.util.JwtUtil;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SecurityException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -33,6 +37,9 @@ public class JwtValidatorFilter extends OncePerRequestFilter {
     @Value("${hrms.jwt.secret}")
     private String secretKey;
 
+    @Autowired
+    private ObjectMapper objectMapper;
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String jwtToken = request.getHeader(AUTHORIZATION);
@@ -47,9 +54,21 @@ public class JwtValidatorFilter extends OncePerRequestFilter {
                 Authentication auth = new UsernamePasswordAuthenticationToken(user.name(), null,
                         AuthorityUtils.commaSeparatedStringToAuthorityList(user.authorities()));
                 SecurityContextHolder.getContext().setAuthentication(auth);
+            } catch (SecurityException se) {
+                LOG.error("The token is not valid. {}", se.getLocalizedMessage());
+                JwtUtil.writeMessageToResponse(request, response, HttpStatus.UNAUTHORIZED,
+                        "The token is not valid.", "Validation Exception", objectMapper);
+                return;
+            } catch (ExpiredJwtException ee) {
+                LOG.error("The token is expired. {}", ee.getLocalizedMessage());
+                JwtUtil.writeMessageToResponse(request, response, HttpStatus.UNAUTHORIZED,
+                        "The token is expired.", "Validation Exception", objectMapper);
+                return;
             } catch (Exception e) {
                 LOG.error("The token is not valid. {}", e.getLocalizedMessage());
-                throw new BadCredentialsException("Invalid Token received!");
+                JwtUtil.writeMessageToResponse(request, response, HttpStatus.UNAUTHORIZED,
+                        e.getLocalizedMessage(), "Validation Exception", objectMapper);
+                return;
             }
 
         }
