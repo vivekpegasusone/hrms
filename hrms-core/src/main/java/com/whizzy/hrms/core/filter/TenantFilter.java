@@ -25,7 +25,7 @@ import static com.whizzy.hrms.core.util.HrmsCoreUtil.findDomainNameFromEmail;
 public class TenantFilter extends OncePerRequestFilter {
     private static final Logger LOG = LoggerFactory.getLogger(TenantFilter.class);
 
-    private BasicAuthenticationConverter authenticationConverter = new BasicAuthenticationConverter();
+    private final BasicAuthenticationConverter authenticationConverter = new BasicAuthenticationConverter();
 
     @Autowired
     private TenantService tenantService;

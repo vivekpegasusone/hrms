@@ -28,7 +28,7 @@ public class AuthController {
     private UserAuthenticationService userAuthenticationService;
 
     @GetMapping("/api/authentication")
-    public AuthDetail authenticateAndAuthorize(HttpServletRequest request, HttpServletResponse response) {
+    public AuthDetail authenticateAndAuthorize(HttpServletResponse response) {
         // spring security ensures that loginId exists and is successful
         String token = response.getHeader(AUTHORIZATION);
         String loginId = SecurityUtil.getCurrentUserLoginId();

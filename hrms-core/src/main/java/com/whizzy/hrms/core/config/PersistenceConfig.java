@@ -86,7 +86,7 @@ public class PersistenceConfig {
         return propertyMap;
     }
 
-    private final Properties additionalProperties() {
+    private Properties additionalProperties() {
         final Properties hibernateProperties = new Properties();
         // Any other property specific to vendor and not available via AvailableSettings
         return hibernateProperties;
