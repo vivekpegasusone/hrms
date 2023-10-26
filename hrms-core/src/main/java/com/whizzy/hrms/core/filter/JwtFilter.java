@@ -1,6 +1,8 @@
 package com.whizzy.hrms.core.filter;
 
 import com.whizzy.hrms.core.tenant.TenantContext;
+import com.whizzy.hrms.core.tenant.domain.UserWithAuthorities;
+import com.whizzy.hrms.core.tenant.service.UserAuthenticationService;
 import com.whizzy.hrms.core.util.JwtUtil;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.FilterChain;
@@ -9,7 +11,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,6 +26,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.whizzy.hrms.core.util.HrmsCoreConstants.*;
@@ -35,13 +41,24 @@ public class JwtFilter extends OncePerRequestFilter {
     @Value("${hrms.jwt.secret}")
     private String secretKey;
 
+    private final CacheManager cacheManager;
+    private final UserAuthenticationService userAuthenticationService;
+
+    public JwtFilter(@Autowired UserAuthenticationService userAuthenticationService,
+                     @Autowired CacheManager cacheManager) {
+        this.cacheManager = cacheManager;
+        this.userAuthenticationService = userAuthenticationService;
+    }
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (Objects.nonNull(authentication)) {
+            Optional<UserWithAuthorities> optionalUserAuth = userAuthenticationService.findByLoginId(authentication.getName());
             SecretKey key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
             String authorityStr = populateAuthorities(authentication.getAuthorities());
-            response.setHeader(AUTHORIZATION, JwtUtil.generateToken(TenantContext.getTenantId(), authentication.getName(), authorityStr, key, tokenExpiryTime));
+            response.setHeader(AUTHORIZATION, JwtUtil.generateToken(optionalUserAuth.get(), TenantContext.getTenantId(), authorityStr, key, tokenExpiryTime));
+            cacheManager.getCache(LOGGED_IN_USER_CACHE).evictIfPresent(authentication.getName());
         }
 
         filterChain.doFilter(request, response);

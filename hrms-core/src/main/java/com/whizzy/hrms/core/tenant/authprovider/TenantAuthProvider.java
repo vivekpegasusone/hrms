@@ -5,6 +5,7 @@ import com.whizzy.hrms.core.exception.InActiveUserException;
 import com.whizzy.hrms.core.tenant.service.UserAuthenticationService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -24,11 +25,14 @@ import static com.whizzy.hrms.core.util.HrmsCoreConstants.ACTIVE;
 @Component(value = "tenantAuthProvider")
 public class TenantAuthProvider implements AuthenticationProvider {
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
+    private final UserAuthenticationService userAuthenticationService;
 
-    @Autowired
-    private UserAuthenticationService userAuthenticationService;
+    public TenantAuthProvider (@Autowired PasswordEncoder passwordEncoder,
+                               @Autowired UserAuthenticationService userAuthenticationService) {
+        this.passwordEncoder = passwordEncoder;
+        this.userAuthenticationService = userAuthenticationService;
+    }
 
     @Override
     @Transactional
@@ -44,8 +48,6 @@ public class TenantAuthProvider implements AuthenticationProvider {
                         throw new BadCredentialsException("The password is invalid for user " + username);
                     }
                 }).orElseThrow(() -> new BadCredentialsException("No user registered with loginId " + username));
-
-
     }
 
     @Override

@@ -14,7 +14,7 @@ public class UserAuthenticationRepositoryImpl implements UserAuthenticationRepos
     private EntityManager entityManager;
 
     private static final String query = """
-            select u.first_name, u.last_name, u.login_id, u.password_hash, u.status, a.name
+            select u.id, u.first_name, u.last_name, u.login_id, u.password_hash, u.status, a.name
             from user u
             join user_access_group ua on u.id = ua.user_id
             join access_group a on ua.access_group_id = a.id

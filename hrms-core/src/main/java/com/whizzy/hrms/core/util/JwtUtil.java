@@ -1,6 +1,8 @@
 package com.whizzy.hrms.core.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.whizzy.hrms.core.tenant.domain.UserWithAuthorities;
+import com.whizzy.hrms.core.tenant.domain.dto.UserSessionData;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,9 +23,7 @@ public class JwtUtil {
     private static final String JWT_TOKEN = "JWT Token";
     private static final String APPLICATION_JSON = "application/json";
 
-    public record UserAndAuthorities (String tenantId, String name, String authorities) {}
-
-    public static String generateToken(String tenantId, String name, String authorities,
+    public static String generateToken(UserWithAuthorities user, String tenantId, String authorities,
                                        SecretKey secretKey, long tokenExpiryTime)
             throws IllegalArgumentException {
 
@@ -31,27 +31,29 @@ public class JwtUtil {
         Date expiryDate = new Date(currentTimeInMillis + tokenExpiryTime);
 
         return Jwts.builder()
-                .setIssuer(APP_NAME)
-                .setSubject(JWT_TOKEN)
-                .claim(USER_NAME, name)
+                .issuer(APP_NAME)
+                .subject(JWT_TOKEN)
+                .claim(ID, user.getId())
+                .claim(LOGIN_ID, user.getLoginId())
                 .claim(TENANT_ID, tenantId)
                 .claim(AUTHORITIES, authorities)
-                .setIssuedAt(new Date(currentTimeInMillis))
-                .setExpiration(expiryDate)
+                .issuedAt(new Date(currentTimeInMillis))
+                .expiration(expiryDate)
                 .signWith(secretKey).compact();
     }
 
-    public static UserAndAuthorities validateAndGet(String jwtToken, SecretKey secretKey) {
+    public static UserSessionData validateAndGet(String jwtToken, SecretKey secretKey) {
         Claims claims = Jwts.parser()
-                .setSigningKey(secretKey)
+                .verifyWith(secretKey)
                 .build()
-                .parseClaimsJws(jwtToken)
-                .getBody();
+                .parseSignedClaims(jwtToken)
+                .getPayload();
 
+        Long id = Long.valueOf(((Integer)claims.get(ID)).longValue());
         String tenantId = (String)(claims.get(TENANT_ID));
-        String username = (String)(claims.get(USER_NAME));
+        String username = (String)(claims.get(LOGIN_ID));
         String authorities = (String) claims.get(AUTHORITIES);
-        return new UserAndAuthorities(tenantId, username, authorities);
+        return new UserSessionData(id, username, authorities, tenantId);
     }
 
     public static void writeMessageToResponse(HttpServletRequest request, HttpServletResponse response,

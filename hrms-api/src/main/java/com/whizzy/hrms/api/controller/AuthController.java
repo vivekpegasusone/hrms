@@ -4,7 +4,6 @@ import com.whizzy.hrms.api.domain.auth.AuthDetail;
 import com.whizzy.hrms.core.tenant.domain.UserWithAuthorities;
 import com.whizzy.hrms.core.tenant.service.UserAuthenticationService;
 import com.whizzy.hrms.core.util.SecurityUtil;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
