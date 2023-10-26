@@ -21,7 +21,7 @@ public class CacheConfig {
     }
 
     @Bean
-    public CacheManager cacheManager(@Autowired Caffeine caffeine) {
+    public CacheManager cacheManager(@Autowired Caffeine<Object, Object> caffeine) {
         CaffeineCacheManager caffeineCacheManager = new CaffeineCacheManager();
         caffeineCacheManager.setCaffeine(caffeine);
         return caffeineCacheManager;

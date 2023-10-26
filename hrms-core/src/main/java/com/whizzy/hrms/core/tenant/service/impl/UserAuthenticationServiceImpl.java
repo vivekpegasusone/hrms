@@ -47,7 +47,7 @@ public class UserAuthenticationServiceImpl implements UserAuthenticationService 
         if(LOG.isDebugEnabled()) {
             String auth;
             if(Objects.nonNull(userWithAuthorities)) {
-                auth = userWithAuthorities.getAuthorities().stream().collect(Collectors.joining(COMMA));
+                auth = String.join(COMMA, userWithAuthorities.getAuthorities());
             } else {
                 auth = EMPTY;
             }
