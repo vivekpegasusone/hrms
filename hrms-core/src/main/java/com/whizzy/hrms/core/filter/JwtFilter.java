@@ -53,11 +53,14 @@ public class JwtFilter extends OncePerRequestFilter {
             Optional<UserWithAuthorities> optionalUserAuth = userAuthenticationService.findByLoginId(authentication.getName());
             SecretKey key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
             String authorityStr = populateAuthorities(authentication.getAuthorities());
-            response.setHeader(AUTHORIZATION, JwtUtil.generateToken(optionalUserAuth.get(), TenantContext.getTenantId(), authorityStr, key, tokenExpiryTime));
-            cacheManager.getCache(LOGGED_IN_USER_CACHE).evictIfPresent(authentication.getName());
+            String token = JwtUtil.generateToken(optionalUserAuth.get(), TenantContext.getTenantId(), authorityStr, key, tokenExpiryTime);
+            response.setHeader(AUTHORIZATION, token);
         }
 
         filterChain.doFilter(request, response);
+        if (Objects.nonNull(authentication) && Objects.nonNull(authentication.getName())) {
+            cacheManager.getCache(LOGGED_IN_USER_CACHE).evictIfPresent(authentication.getName());
+        }
     }
 
     @Override
