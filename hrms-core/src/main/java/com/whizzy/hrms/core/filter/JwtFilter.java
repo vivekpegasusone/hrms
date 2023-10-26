@@ -9,12 +9,9 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.CacheManager;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -33,19 +30,18 @@ import static com.whizzy.hrms.core.util.HrmsCoreConstants.*;
 
 @Component
 public class JwtFilter extends OncePerRequestFilter {
-    private static final Logger LOG = LoggerFactory.getLogger(JwtFilter.class);
 
-    @Value("${hrms.jwt.token.expiry.in.milli}")
-    private long tokenExpiryTime;
-
-    @Value("${hrms.jwt.secret}")
-    private String secretKey;
-
+    private final long tokenExpiryTime;
+    private final String secretKey;
     private final CacheManager cacheManager;
     private final UserAuthenticationService userAuthenticationService;
 
     public JwtFilter(@Autowired UserAuthenticationService userAuthenticationService,
-                     @Autowired CacheManager cacheManager) {
+                     @Autowired CacheManager cacheManager,
+                     @Value("${hrms.jwt.token.expiry.in.milli}") long tokenExpiryTime,
+                     @Value("${hrms.jwt.secret}") String secretKey) {
+        this.secretKey = secretKey;
+        this.tokenExpiryTime = tokenExpiryTime;
         this.cacheManager = cacheManager;
         this.userAuthenticationService = userAuthenticationService;
     }
@@ -53,7 +49,7 @@ public class JwtFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (Objects.nonNull(authentication)) {
+        if (Objects.nonNull(authentication) && Objects.nonNull(authentication.getName())) {
             Optional<UserWithAuthorities> optionalUserAuth = userAuthenticationService.findByLoginId(authentication.getName());
             SecretKey key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
             String authorityStr = populateAuthorities(authentication.getAuthorities());

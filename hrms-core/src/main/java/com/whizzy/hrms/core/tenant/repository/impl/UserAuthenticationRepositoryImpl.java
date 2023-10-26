@@ -11,7 +11,11 @@ import java.util.List;
 public class UserAuthenticationRepositoryImpl implements UserAuthenticationRepository {
 
     @Autowired
-    private EntityManager entityManager;
+    private final EntityManager entityManager;
+
+    public UserAuthenticationRepositoryImpl(@Autowired EntityManager entityManager) {
+        this.entityManager = entityManager;
+    }
 
     private static final String query = """
             select u.id, u.first_name, u.last_name, u.login_id, u.password_hash, u.status, a.name

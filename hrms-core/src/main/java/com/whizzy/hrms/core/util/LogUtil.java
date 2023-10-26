@@ -13,6 +13,6 @@ public class LogUtil {
     public static void logStackTrace(Exception exception) {
         StringWriter writer = new StringWriter();
         exception.printStackTrace(new PrintWriter(writer));
-        LOG.error("StackTrace : {}", writer.toString());
+        LOG.error("StackTrace : {}", writer);
     }
 }

@@ -20,11 +20,13 @@ import static com.whizzy.hrms.core.util.HrmsCoreConstants.AUTHORIZATION;
 @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 public class AuthController {
 
-    @Autowired
-    private ModelMapper modelMapper;
+    private final ModelMapper modelMapper;
+    private final UserAuthenticationService userAuthenticationService;
 
-    @Autowired
-    private UserAuthenticationService userAuthenticationService;
+    public AuthController(@Autowired ModelMapper modelMapper, @Autowired UserAuthenticationService userAuthenticationService) {
+        this.modelMapper = modelMapper;
+        this.userAuthenticationService = userAuthenticationService;
+    }
 
     @GetMapping("/api/authentication")
     public AuthDetail authenticateAndAuthorize(HttpServletResponse response) {

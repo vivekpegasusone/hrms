@@ -7,6 +7,7 @@ import static com.whizzy.hrms.core.util.HrmsCoreConstants.ACTIVE;
 import static com.whizzy.hrms.core.util.HrmsCoreConstants.IN_ACTIVE;
 
 public class UserWithAuthorities {
+
     private final Long id;
     private final String firstName;
     private final String lastName;

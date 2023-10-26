@@ -9,7 +9,6 @@
         <version>0.1</version>
     </parent>
 
-    <groupId>com.whizzy</groupId>
     <artifactId>hrms-api</artifactId>
     <packaging>war</packaging>
     <name>hrms-api</name>

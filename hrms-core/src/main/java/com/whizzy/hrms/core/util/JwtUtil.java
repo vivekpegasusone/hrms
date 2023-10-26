@@ -49,7 +49,7 @@ public class JwtUtil {
                 .parseSignedClaims(jwtToken)
                 .getPayload();
 
-        Long id = Long.valueOf(((Integer)claims.get(ID)).longValue());
+        Long id = ((Integer)claims.get(ID)).longValue();
         String tenantId = (String)(claims.get(TENANT_ID));
         String username = (String)(claims.get(LOGIN_ID));
         String authorities = (String) claims.get(AUTHORITIES);

@@ -5,7 +5,6 @@ import com.whizzy.hrms.core.exception.InActiveUserException;
 import com.whizzy.hrms.core.tenant.service.UserAuthenticationService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

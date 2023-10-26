@@ -31,6 +31,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
 import static com.whizzy.hrms.core.util.HrmsCoreConstants.*;
+import static java.util.Objects.nonNull;
 
 @Component
 public class JwtValidatorFilter extends OncePerRequestFilter {
@@ -51,7 +52,7 @@ public class JwtValidatorFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         UserSessionData userData = null;
         String jwtToken = request.getHeader(AUTHORIZATION);
-        if (Objects.nonNull(jwtToken)) {
+        if (nonNull(jwtToken)) {
             SecretKey key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
             try {
                 userData = JwtUtil.validateAndGet(jwtToken, key);
@@ -75,7 +76,7 @@ public class JwtValidatorFilter extends OncePerRequestFilter {
                 return;
             }
 
-            if(Objects.nonNull(userData)) {
+            if(nonNull(userData) && nonNull(userData.loginId())) {
                 LOG.info("Tenant identified for tokes as {}.", userData.tenantId());
                 Authentication auth = new UsernamePasswordAuthenticationToken(userData.loginId(), null,
                         AuthorityUtils.commaSeparatedStringToAuthorityList(userData.authorities()));
@@ -88,7 +89,7 @@ public class JwtValidatorFilter extends OncePerRequestFilter {
 
         filterChain.doFilter(request, response);
         TenantContext.clear();
-        if(Objects.nonNull(userData)) {
+        if(nonNull(userData) && nonNull(userData.loginId())) {
             LOG.info("Session cache evicted for {}.", userData.loginId());
             cacheManager.getCache(LOGGED_IN_USER_CACHE).evictIfPresent(userData.loginId());
         }

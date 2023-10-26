@@ -20,8 +20,11 @@ import static com.whizzy.hrms.core.util.HrmsCoreConstants.*;
 public class UserAuthenticationServiceImpl implements UserAuthenticationService {
     private static final Logger LOG = LoggerFactory.getLogger(UserAuthenticationServiceImpl.class);
 
-    @Autowired
-    private UserAuthenticationRepository userAuthenticationRepository;
+     private final UserAuthenticationRepository userAuthenticationRepository;
+
+    public UserAuthenticationServiceImpl (@Autowired UserAuthenticationRepository userAuthenticationRepository) {
+        this.userAuthenticationRepository = userAuthenticationRepository;
+    }
 
     @Override
     @Cacheable(value = LOGGED_IN_USER_CACHE, unless="#result == null")
