@@ -61,11 +61,7 @@ public class TenantAuthProvider implements AuthenticationProvider {
     }
 
     private boolean isValidUser(UserAuthorities userAuth) {
-        boolean isValid = true;
-        if (userAuth.getStatus().equalsIgnoreCase(IN_ACTIVE)) {
-            isValid = false;
-        }
-        return isValid;
+        return !userAuth.getStatus().equalsIgnoreCase(IN_ACTIVE);
     }
 
     private List<GrantedAuthority> prepareAuthorities(Set<String> authoritySet) {
