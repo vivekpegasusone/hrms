@@ -1,8 +1,8 @@
 package com.whizzy.hrms.core.tenant.authprovider;
 
-import com.whizzy.hrms.core.tenant.domain.UserWithAuthorities;
 import com.whizzy.hrms.core.exception.InActiveUserException;
-import com.whizzy.hrms.core.tenant.service.UserAuthenticationService;
+import com.whizzy.hrms.core.tenant.domain.entity.UserAuthorities;
+import com.whizzy.hrms.core.tenant.repository.UserAuthenticationRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -19,18 +19,18 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static com.whizzy.hrms.core.util.HrmsCoreConstants.ACTIVE;
+import static com.whizzy.hrms.core.util.HrmsCoreConstants.IN_ACTIVE;
 
 @Component(value = "tenantAuthProvider")
 public class TenantAuthProvider implements AuthenticationProvider {
 
     private final PasswordEncoder passwordEncoder;
-    private final UserAuthenticationService userAuthenticationService;
+    private final UserAuthenticationRepository userAuthRepository;
 
     public TenantAuthProvider (@Autowired PasswordEncoder passwordEncoder,
-                               @Autowired UserAuthenticationService userAuthenticationService) {
+                               @Autowired UserAuthenticationRepository userAuthRepository) {
         this.passwordEncoder = passwordEncoder;
-        this.userAuthenticationService = userAuthenticationService;
+        this.userAuthRepository = userAuthRepository;
     }
 
     @Override
@@ -38,11 +38,17 @@ public class TenantAuthProvider implements AuthenticationProvider {
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String username = authentication.getName();
         String password = authentication.getCredentials().toString();
-        return userAuthenticationService
+        return userAuthRepository
                 .findByLoginId(username)
                 .map(t -> {
                     if (passwordEncoder.matches(password, t.getPassword())) {
-                        return validateUser(t);
+                        if(isValidUser(t)) {
+                            return new UsernamePasswordAuthenticationToken(
+                                    t.getLoginId(), t.getPassword(),
+                                    prepareAuthorities(t.getAuthorities()));
+                        } else {
+                            throw new InActiveUserException("User with loginId " + t.getLoginId() + " is deactivated.");
+                        }
                     } else {
                         throw new BadCredentialsException("The password is invalid for user " + username);
                     }
@@ -54,15 +60,12 @@ public class TenantAuthProvider implements AuthenticationProvider {
         return (UsernamePasswordAuthenticationToken.class.isAssignableFrom(authentication));
     }
 
-    private Authentication validateUser(UserWithAuthorities userSecurity) {
-        if (userSecurity.getStatus().equalsIgnoreCase(ACTIVE)) {
-            return new UsernamePasswordAuthenticationToken(
-                    userSecurity.getLoginId(), userSecurity.getPassword(),
-                    prepareAuthorities(userSecurity.getAuthorities()));
-
-        } else {
-            throw new InActiveUserException("User with loginId " + userSecurity.getLoginId() + " is deactivated.");
+    private boolean isValidUser(UserAuthorities userAuth) {
+        boolean isValid = true;
+        if (userAuth.getStatus().equalsIgnoreCase(IN_ACTIVE)) {
+            isValid = false;
         }
+        return isValid;
     }
 
     private List<GrantedAuthority> prepareAuthorities(Set<String> authoritySet) {

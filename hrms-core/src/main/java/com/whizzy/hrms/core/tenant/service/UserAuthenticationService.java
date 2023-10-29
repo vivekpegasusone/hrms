@@ -1,9 +1,9 @@
 package com.whizzy.hrms.core.tenant.service;
 
-import com.whizzy.hrms.core.tenant.domain.UserWithAuthorities;
+import com.whizzy.hrms.core.tenant.domain.dto.AuthDetail;
 
 import java.util.Optional;
 
 public interface UserAuthenticationService {
-    Optional<UserWithAuthorities> findByLoginId (String login);
+    AuthDetail findByLoginId (String login);
 }

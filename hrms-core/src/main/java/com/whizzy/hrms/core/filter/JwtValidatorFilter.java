@@ -2,7 +2,7 @@ package com.whizzy.hrms.core.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.whizzy.hrms.core.tenant.TenantContext;
-import com.whizzy.hrms.core.tenant.domain.dto.UserSessionData;
+import com.whizzy.hrms.core.filter.model.UserSessionData;
 import com.whizzy.hrms.core.util.JwtUtil;
 import com.whizzy.hrms.core.util.LogUtil;
 import io.jsonwebtoken.ExpiredJwtException;

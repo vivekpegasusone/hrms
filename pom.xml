@@ -21,7 +21,6 @@
         <java.version>17</java.version>
         <junit.version>5.9.2</junit.version>
         <openapi.version>2.2.0</openapi.version>
-        <modelmapper.version>3.1.0</modelmapper.version>
         <jsonwebtoken.version>0.12.2</jsonwebtoken.version>
         <mysql.connector.version>8.0.33</mysql.connector.version>
     </properties>
@@ -85,11 +84,6 @@
                 <groupId>org.springdoc</groupId>
                 <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
                 <version>${openapi.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.modelmapper</groupId>
-                <artifactId>modelmapper</artifactId>
-                <version>${modelmapper.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

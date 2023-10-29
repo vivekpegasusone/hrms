@@ -1,4 +1,4 @@
-package com.whizzy.hrms.core.tenant.domain;
+package com.whizzy.hrms.core.tenant.domain.entity;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -6,7 +6,7 @@ import java.util.Set;
 import static com.whizzy.hrms.core.util.HrmsCoreConstants.ACTIVE;
 import static com.whizzy.hrms.core.util.HrmsCoreConstants.IN_ACTIVE;
 
-public class UserWithAuthorities {
+public class UserAuthorities {
 
     private final Long id;
     private final String firstName;
@@ -16,8 +16,8 @@ public class UserWithAuthorities {
     private final String status;
     private final Set<String> authorities = new HashSet<>();
 
-    public UserWithAuthorities(Long id, String firstName, String lastName,
-                               String loginId, String password, Boolean status) {
+    public UserAuthorities(Long id, String firstName, String lastName,
+                           String loginId, String password, Boolean status) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -60,7 +60,7 @@ public class UserWithAuthorities {
 
     @Override
     public String toString() {
-        return "UserWithAuthorities{" +
+        return "UserAuthorities{" +
                 "id=" + id +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +

@@ -1,5 +1,6 @@
 package com.whizzy.hrms.core.exception.handler;
 
+import com.whizzy.hrms.core.exception.EntityNotFoundException;
 import io.jsonwebtoken.security.SignatureException;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -17,6 +18,14 @@ import java.net.URI;
 @RestControllerAdvice
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class HrmsExceptionHandler extends ResponseEntityExceptionHandler {
+
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ErrorResponse handleEntityNotFoundException(Exception ex, WebRequest request) {
+        return ErrorResponse.builder(ex, HttpStatus.NOT_FOUND, ex.getMessage())
+                .title("Entity not found in database.")
+                .type(URI.create(request.getContextPath()))
+                .build();
+    }
 
     @ExceptionHandler(AuthenticationException.class)
     public ErrorResponse handleAuthenticationException(Exception ex, WebRequest request) {

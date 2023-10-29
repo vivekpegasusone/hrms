@@ -1,7 +1,9 @@
 package com.whizzy.hrms.core.tenant.repository;
 
-import java.util.List;
+import com.whizzy.hrms.core.tenant.domain.entity.UserAuthorities;
+
+import java.util.Optional;
 
 public interface UserAuthenticationRepository {
-    List<Object[]> findByLogin(String login);
+    Optional<UserAuthorities> findByLoginId(String login);
 }

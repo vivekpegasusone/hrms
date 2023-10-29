@@ -1,8 +1,8 @@
 package com.whizzy.hrms.core.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.whizzy.hrms.core.tenant.domain.UserWithAuthorities;
-import com.whizzy.hrms.core.tenant.domain.dto.UserSessionData;
+import com.whizzy.hrms.core.tenant.domain.entity.UserAuthorities;
+import com.whizzy.hrms.core.filter.model.UserSessionData;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import jakarta.servlet.http.HttpServletRequest;
@@ -23,7 +23,7 @@ public class JwtUtil {
     private static final String JWT_TOKEN = "JWT Token";
     private static final String APPLICATION_JSON = "application/json";
 
-    public static String generateToken(UserWithAuthorities user, String tenantId, String authorities,
+    public static String generateToken(UserAuthorities user, String tenantId, String authorities,
                                        SecretKey secretKey, long tokenExpiryTime)
             throws IllegalArgumentException {
 

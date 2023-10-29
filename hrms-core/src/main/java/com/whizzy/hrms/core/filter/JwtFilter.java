@@ -1,8 +1,8 @@
 package com.whizzy.hrms.core.filter;
 
 import com.whizzy.hrms.core.tenant.TenantContext;
-import com.whizzy.hrms.core.tenant.domain.UserWithAuthorities;
-import com.whizzy.hrms.core.tenant.service.UserAuthenticationService;
+import com.whizzy.hrms.core.tenant.domain.entity.UserAuthorities;
+import com.whizzy.hrms.core.tenant.repository.UserAuthenticationRepository;
 import com.whizzy.hrms.core.util.JwtUtil;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.FilterChain;
@@ -34,23 +34,23 @@ public class JwtFilter extends OncePerRequestFilter {
     private final long tokenExpiryTime;
     private final String secretKey;
     private final CacheManager cacheManager;
-    private final UserAuthenticationService userAuthenticationService;
+    private final UserAuthenticationRepository userAuthRepo;
 
-    public JwtFilter(@Autowired UserAuthenticationService userAuthenticationService,
+    public JwtFilter(@Autowired UserAuthenticationRepository userAuthRepo,
                      @Autowired CacheManager cacheManager,
                      @Value("${hrms.jwt.token.expiry.in.milli}") long tokenExpiryTime,
                      @Value("${hrms.jwt.secret}") String secretKey) {
         this.secretKey = secretKey;
         this.tokenExpiryTime = tokenExpiryTime;
         this.cacheManager = cacheManager;
-        this.userAuthenticationService = userAuthenticationService;
+        this.userAuthRepo = userAuthRepo;
     }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (Objects.nonNull(authentication) && Objects.nonNull(authentication.getName())) {
-            Optional<UserWithAuthorities> optionalUserAuth = userAuthenticationService.findByLoginId(authentication.getName());
+            Optional<UserAuthorities> optionalUserAuth = userAuthRepo.findByLoginId(authentication.getName());
             SecretKey key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
             String authorityStr = populateAuthorities(authentication.getAuthorities());
             String token = JwtUtil.generateToken(optionalUserAuth.get(), TenantContext.getTenantId(), authorityStr, key, tokenExpiryTime);
