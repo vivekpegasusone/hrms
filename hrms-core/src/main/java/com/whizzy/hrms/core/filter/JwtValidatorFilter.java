@@ -3,10 +3,10 @@ package com.whizzy.hrms.core.filter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.whizzy.hrms.core.tenant.TenantContext;
 import com.whizzy.hrms.core.filter.model.UserSessionData;
-import com.whizzy.hrms.core.util.JwtUtil;
+import com.whizzy.hrms.core.filter.util.JwtUtil;
 import com.whizzy.hrms.core.util.LogUtil;
+import com.whizzy.hrms.core.util.ResponseUtil;
 import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SecurityException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -15,7 +15,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.CacheManager;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -25,9 +24,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import javax.crypto.SecretKey;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 
 import static com.whizzy.hrms.core.util.HrmsCoreConstants.*;
 import static java.util.Objects.nonNull;
@@ -36,15 +33,16 @@ import static java.util.Objects.nonNull;
 public class JwtValidatorFilter extends OncePerRequestFilter {
     private static final Logger LOG = LoggerFactory.getLogger(JwtValidatorFilter.class);
 
-    private final String secretKey;
+    private final JwtUtil jwtParser;
     private final ObjectMapper objectMapper;
     private final CacheManager cacheManager;
 
-    public JwtValidatorFilter(@Value("${hrms.jwt.secret}") String secretKey, @Autowired ObjectMapper objectMapper,
-                              @Autowired CacheManager cacheManager) {
-        this.secretKey = secretKey;//Base64.getEncoder().encodeToString(secretKey.getBytes());;
+    public JwtValidatorFilter(@Autowired ObjectMapper objectMapper,
+                              @Autowired CacheManager cacheManager,
+                              @Autowired JwtUtil jwtParser) {
         this.objectMapper = objectMapper;
         this.cacheManager = cacheManager;
+        this.jwtParser = jwtParser;
     }
 
     @Override
@@ -52,24 +50,23 @@ public class JwtValidatorFilter extends OncePerRequestFilter {
         UserSessionData userData = null;
         String jwtToken = request.getHeader(AUTHORIZATION);
         if (nonNull(jwtToken)) {
-            SecretKey key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
             try {
-                userData = JwtUtil.validateAndGet(jwtToken, key);
+                userData = jwtParser.validateAndGet(jwtToken);
             } catch (SecurityException se) {
                 LOG.error("The token is not valid. {}", se.getLocalizedMessage());
-                JwtUtil.writeMessageToResponse(request, response, HttpStatus.UNAUTHORIZED,
+                ResponseUtil.writeMessageToResponse(request, response, HttpStatus.UNAUTHORIZED,
                         "The token is not valid.", "Validation Exception", objectMapper);
                 LogUtil.logStackTrace(se);
                 return;
             } catch (ExpiredJwtException ee) {
                 LOG.error("The token is expired. {}", ee.getLocalizedMessage());
-                JwtUtil.writeMessageToResponse(request, response, HttpStatus.UNAUTHORIZED,
+                ResponseUtil.writeMessageToResponse(request, response, HttpStatus.UNAUTHORIZED,
                         "The token is expired.", "Validation Exception", objectMapper);
                 LogUtil.logStackTrace(ee);
                 return;
             } catch (Exception e) {
                 LOG.error("Not able to parse token. {}", e.getLocalizedMessage());
-                JwtUtil.writeMessageToResponse(request, response, HttpStatus.UNAUTHORIZED,
+                ResponseUtil.writeMessageToResponse(request, response, HttpStatus.UNAUTHORIZED,
                         e.getLocalizedMessage(), "Validation Exception", objectMapper);
                 LogUtil.logStackTrace(e);
                 return;

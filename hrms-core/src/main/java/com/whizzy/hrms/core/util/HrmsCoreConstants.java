@@ -20,6 +20,7 @@ public interface HrmsCoreConstants {
     String AUTHORITIES = "authorities";
     String AUTHORIZATION = "Authorization";
     String POOL_NAME_SUFFIX = "_DataSource";
+    String APPLICATION_JSON = "application/json";
     String LOGGED_IN_USER_CACHE = "LoggedInUserCache";
     String MASTER_PERSISTENT_UNIT = "master-persistence-unit";
     String TENANT_PERSISTENT_UNIT = "tenant-persistence-unit";
